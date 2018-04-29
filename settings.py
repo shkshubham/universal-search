@@ -25,8 +25,9 @@ except AttributeError:
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
-        Dialog.setObjectName(_fromUtf8("Dialog"))
+        Dialog.setObjectName(_fromUtf8("Settings"))
         Dialog.resize(645, 375)
+        Dialog.setWindowIcon(QtGui.QIcon("icons/_settings.png"))
         self.settingsFile = open("settings.json","r")
         self.jsonFile = json.loads(self.settingsFile.read())
         self.firefoxPath = self.jsonFile["browser"]["firefox"]
@@ -54,7 +55,7 @@ class Ui_Dialog(object):
         self.tabWidget.setGeometry(QtCore.QRect(30, 20, 601, 281))
         self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
         self.tab = QtGui.QWidget()
-        self.tab.setObjectName(_fromUtf8("tab"))
+        self.tab.setObjectName(_fromUtf8("Browser"))
         self.chromeLine = QtGui.QLineEdit(self.tab)
         self.chromeLine.setGeometry(QtCore.QRect(108, 61, 414, 20))
         self.chromeLine.setObjectName(_fromUtf8("chromeLine"))
@@ -85,7 +86,7 @@ class Ui_Dialog(object):
         self.firefoxLabel.setObjectName(_fromUtf8("firefoxLabel"))
         self.tabWidget.addTab(self.tab, _fromUtf8(""))
         self.tab_2 = QtGui.QWidget()
-        self.tab_2.setObjectName(_fromUtf8("tab_2"))
+        self.tab_2.setObjectName(_fromUtf8("Download"))
         self.mp3Line = QtGui.QLineEdit(self.tab_2)
         self.mp3Line.setGeometry(QtCore.QRect(98, 20, 414, 20))
         self.mp3Line.setObjectName(_fromUtf8("mp3Line"))
@@ -135,17 +136,17 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog", None))
+        Dialog.setWindowTitle(_translate("Dialog", "Settings", None))
         self.chromeLabel.setText(_translate("Dialog", "Chrome", None))
         self.operaLabel.setText(_translate("Dialog", "Opera", None))
         self.IELabel.setText(_translate("Dialog", "IE", None))
         self.firefoxLabel.setText(_translate("Dialog", "Firefox", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Dialog", "Tab 1", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Dialog", "Browser", None))
         self.mp3Label.setText(_translate("Dialog", "Mp3 Path", None))
         self.videoLabel.setText(_translate("Dialog", "Video Path", None))
         self.playerLabel.setText(_translate("Dialog", "Music Player", None))
         self.yotubeDownloadPathLabel.setText(_translate("Dialog", "Youtube Download Path", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Dialog", "Tab 2", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Dialog", "Download/Music", None))
 
 
     def confirmButton(self, button):

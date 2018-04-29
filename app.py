@@ -18,8 +18,9 @@ import json
 import re
 from bs4 import  BeautifulSoup
 import requests
-import pyttsx
+#import pyttsx
 import string
+from multiprocessing import Queue
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -36,8 +37,8 @@ except AttributeError:
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
-        self.engine = pyttsx.init()
-        self.engine.setProperty('rate', 140)
+        #self.engine = pyttsx.init()
+        #self.engine.setProperty('rate', 140)
         self.settingsFile = open("settings.json","r")
         self.jsonFile = json.loads(self.settingsFile.read())
         self.firefoxPath = self.jsonFile["browser"]["firefox"]
@@ -52,13 +53,18 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         #MainWindow.resize(415, 150)
         MainWindow.setFixedSize(415, 150)
+        MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        self.center()
         self.centralwidget = QtGui.QWidget(MainWindow)
+        self.centralwidget.setGeometry(5,5,60,40)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
 
 
 #---------------------------------------------------------YoutubeDownloadBox----------------------------------------
         youtubeDownloaderButtonIcon = QtGui.QIcon()
         youtubeDownloaderButtonIcon.addPixmap(QtGui.QPixmap(_fromUtf8("icons/_download.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+
         self.youtubeDownloaderBox = QtGui.QGroupBox(self.centralwidget)
         self.youtubeDownloaderBox.setGeometry(QtCore.QRect(0, 0, 401, 111))
         self.youtubeDownloaderBox.setTitle(_fromUtf8(""))
@@ -73,6 +79,8 @@ class Ui_MainWindow(object):
         self.youtubeDowloadButton.setGeometry(QtCore.QRect(320, 20, 75, 23))
         self.youtubeDowloadButton.setIcon(youtubeDownloaderButtonIcon)
         self.youtubeDowloadButton.setObjectName(_fromUtf8("youtubeDowloadButton"))
+
+        
         self.youtubeVideoComboBox = QtGui.QComboBox(self.youtubeDownloaderBox)
         self.youtubeVideoComboBox.setGeometry(QtCore.QRect(10, 20, 81, 22))
         self.youtubeVideoComboBox.setObjectName(_fromUtf8("youtubeVideoComboBox"))
@@ -95,6 +103,8 @@ class Ui_MainWindow(object):
         self.youtubeUrlLine.setGeometry(QtCore.QRect(100, 20, 211, 21))
         self.youtubeUrlLine.setAutoFillBackground(False)
         self.youtubeUrlLine.setObjectName(_fromUtf8("youtubeUrlLine"))
+
+        
         self.youtubeAudioComboBox = QtGui.QComboBox(self.youtubeDownloaderBox)
         self.youtubeAudioComboBox.setGeometry(QtCore.QRect(10, 20, 81, 22))
         self.youtubeAudioComboBox.setObjectName(_fromUtf8("youtubeAudioComboBox"))
@@ -405,8 +415,6 @@ class Ui_MainWindow(object):
 
         MainWindow.setWindowIcon(QtGui.QIcon("icons/_search.png"))
 
-
-
     def cbText(self, t):
         self.t = t
         if(self.t == 'search'):
@@ -518,13 +526,13 @@ class Ui_MainWindow(object):
         '-new-tab', self.url])
             elif self.browser == 'IE':
                 wb.get(self.IEPath).open_new_tab(self.url)
-            rq  = requests.get(self.url)
-            serverdata = rq.text
-            serverSoup = BeautifulSoup(serverdata, 'lxml')
-            find = serverSoup.body.find('p')
-            print(find.text)
-            self.engine.say(find.text)
-            self.engine.runAndWait()
+            #rq  = requests.get(self.url)
+            #serverdata = rq.text
+            #serverSoup = BeautifulSoup(serverdata, 'lxml')
+            #find = serverSoup.body.find('p')
+            #print(find.text)
+            #self.engine.say(find.text)
+            #self.engine.runAndWait()
 
 
     def TvshowButton(self, cat):
@@ -575,6 +583,7 @@ class Ui_MainWindow(object):
         self.shoppingBox.setVisible(False)
         self.musicBox.setVisible(False)
         self.playBox.setVisible(False)
+        self.searchText = ''
         self.surl = 'https://google.com/search?q='
         
     def shoppingToolbar(self):
@@ -586,6 +595,7 @@ class Ui_MainWindow(object):
         self.shoppingBox.setVisible(True)
         self.musicBox.setVisible(False)
         self.playBox.setVisible(False)
+        self.searchText = ''
         self.surl = 'https://www.amazon.in/s/field-keywords='
         
     
@@ -598,6 +608,7 @@ class Ui_MainWindow(object):
         self.shoppingBox.setVisible(False)
         self.musicBox.setVisible(True)
         self.playBox.setVisible(False)
+        self.searchText = ''
         self.surl = 'http://gaana.com/search/'
 
     def playToolbar(self):
@@ -669,4 +680,19 @@ class Ui_MainWindow(object):
         json.dump(self.jsonFileData, self.settingsWrite)
         self.settingsWrite.close()
         self.statusbar.showMessage("Downloading...")
-        subprocess.Popen(['youtubeDownload.exe'])
+        subprocess.Popen(['VideoDownload.exe'])
+
+    def center(self):
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+
+    def mousePressEvent(self, event):
+        self.oldPos = event.globalPos()
+
+    def mouseMoveEvent(self, event):
+        delta = QPoint (event.globalPos() - self.oldPos)
+        #print(delta)
+        self.move(self.x() + delta.x(), self.y() + delta.y())
+        self.oldPos = event.globalPos()

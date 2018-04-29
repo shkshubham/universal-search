@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['youtubeDownload.py'],
-             pathex=['/run/media/charlie/4E929B47929B3307/Project/Audio/search'],
+             pathex=['C:\\Project\\Audio\\search'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -18,16 +18,11 @@ pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
-          exclude_binaries=True,
+          a.binaries,
+          a.zipfiles,
+          a.datas,
           name='youtubeDownload',
           debug=False,
           strip=False,
           upx=True,
-          console=True )
-coll = COLLECT(exe,
-               a.binaries,
-               a.zipfiles,
-               a.datas,
-               strip=False,
-               upx=True,
-               name='youtubeDownload')
+          console=True , icon='videodownload.ico')
